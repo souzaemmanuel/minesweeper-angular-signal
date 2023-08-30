@@ -6,8 +6,12 @@ import {
   GameSettings,
   GameStatus,
   NEIGHBOR_OFFSETS,
+  MatchHistory,
+  MatchStatus,
+  Level,
 } from '@minesweep-game/models';
 import { Subscription, interval } from 'rxjs';
+import { MatchHistoryService } from '../match-history/match-history.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +19,28 @@ import { Subscription, interval } from 'rxjs';
 export class GameService {
   grid = signal<BoardCell[][]>([]);
 
+  private isFirstCellClicked = false;
+
+  private timerSubscription?: Subscription;
+
+  formattedTimer = signal<string>('');
+
   totalFlagsAdded = signal<number>(0);
 
   currentSetting = signal<GameSettings>({
     minesNumber: 0,
     xAxisSize: 0,
     yAxisSize: 0,
+    status: GameStatus.INITIALIZED,
   });
 
-  countAvailableCells: Signal<number> = computed(() => {
+  currentMatch = signal<MatchHistory>({
+    minesNumber: 0,
+    xAxisSize: 0,
+    yAxisSize: 0,
+  });
+
+  private countAvailableCells: Signal<number> = computed(() => {
     const total = this.grid().reduce((previous, current) => {
       return (
         previous +
@@ -39,25 +56,28 @@ export class GameService {
   });
 
   playerLost: Signal<boolean> = computed(() => {
-    return this.grid().some((rows) => {
-      return rows.some(
-        (cell) =>
-          cell.type === CellType.MINE && cell.status === CellVisibility.VISIBLE
-      );
-    });
+    return (
+      this.grid().some((rows) => {
+        return rows.some(
+          (cell) =>
+            cell.type === CellType.MINE &&
+            cell.status === CellVisibility.VISIBLE &&
+            !this.playerWon()
+        );
+      }) || this.currentSetting()?.matchStatus === MatchStatus.LOST
+    );
   });
 
   playerWon: Signal<boolean> = computed(() => {
-    if (this.playerLost()) {
-      return false;
-    }
-
     const { xAxisSize, yAxisSize, minesNumber } = this.currentSetting();
     const totalNotMineCells =
       xAxisSize * yAxisSize - (xAxisSize * yAxisSize - minesNumber);
 
     const countAvailableCells = this.countAvailableCells();
-    return totalNotMineCells === countAvailableCells;
+    return (
+      totalNotMineCells === countAvailableCells ||
+      this.currentSetting()?.matchStatus === MatchStatus.WON
+    );
   });
 
   gameEnded: Signal<boolean> = computed(() => {
@@ -79,26 +99,57 @@ export class GameService {
     }, [] as number[][]);
   });
 
+  constructor(private matchHistoryService: MatchHistoryService) {}
+
   start(settings: GameSettings): void {
     this.currentSetting.set(settings);
     this.resetGame();
     this.createBoard(settings);
     this.updateAdjacentMineCounts();
-    this.formattedTimer.set('00:00:00');
+    this.saveNewMatchInfo(settings);
+  }
+
+  private saveNewMatchInfo(settings: GameSettings): void {
+    this.currentMatch.set({
+      difficulty: settings.levelSelected as Level,
+      yAxisSize: settings.yAxisSize,
+      xAxisSize: settings.xAxisSize,
+      minesNumber: settings.minesNumber,
+    });
+  }
+
+  finishMatch() {
+    this.currentMatch.mutate((match) => {
+      match.endTime = new Date().toISOString();
+      match.totalTimeSpent = this.formattedTimer();
+      match.status = this.currentSetting().matchStatus;
+    });
+
+    //TODO: Unsubscribe from that
+    this.matchHistoryService
+      .save(this.currentMatch())
+      .subscribe((res) => console.log(res));
+  }
+
+  saveTimeOfMatchStarted() {
+    this.currentMatch.mutate((match) => {
+      match.startTime = new Date().toISOString();
+    });
   }
 
   resetGame(): void {
     this.grid.set([]);
-    this.currentSetting().status = GameStatus.READY_TO_START;
+
+    this.currentSetting.mutate((settings) => {
+      settings.status = GameStatus.READY_TO_START;
+      settings.matchStatus = undefined;
+    });
+
     this.totalFlagsAdded.set(0);
-    this.formattedTimer.set('00:00:00');
     this.isFirstCellClicked = false;
+    this.formattedTimer.set('00:00:00');
     this.stopWatch();
   }
-
-  isFirstCellClicked = false;
-  timerSubscription?: Subscription;
-  formattedTimer = signal<string>('');
 
   startimer() {
     this.timerSubscription = interval(1000).subscribe((tick: number) => {
@@ -217,12 +268,24 @@ export class GameService {
         (setting) => (setting.status = GameStatus.INITIALIZED)
       );
 
-    if (this.playerLost() || this.playerWon()) {
+    if (this.playerLost()) {
       this.revealAllBombs();
       this.stopWatch();
-      this.currentSetting.mutate(
-        (setting) => (setting.status = GameStatus.FINISHED)
-      );
+      this.currentSetting.mutate((setting) => {
+        setting.status = GameStatus.FINISHED;
+        setting.matchStatus = MatchStatus.LOST;
+      });
+      this.finishMatch();
+    }
+
+    if (this.playerWon()) {
+      this.revealAllBombs();
+      this.stopWatch();
+      this.currentSetting.mutate((setting) => {
+        setting.status = GameStatus.FINISHED;
+        setting.matchStatus = MatchStatus.WON;
+      });
+      this.finishMatch();
     }
   }
 
@@ -245,8 +308,10 @@ export class GameService {
       return;
     }
 
+    //TODO: Create a signal for it
     if (this.isFirstCellClicked === false) {
       this.startimer();
+      this.saveTimeOfMatchStarted();
       this.isFirstCellClicked = true;
     }
 
@@ -339,9 +404,9 @@ export class GameService {
           typeof cellAround.value === 'number';
 
         if (isValidForReveal) {
+          //to discover the cells smoothly
           setTimeout(() => {
             cellAround.status = CellVisibility.VISIBLE;
-            this.revealZeroNeighbours(neighbourCellCoords);
           }, 50);
         }
       }

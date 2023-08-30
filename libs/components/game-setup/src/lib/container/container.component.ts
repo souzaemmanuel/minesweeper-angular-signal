@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   GameRoutes,
+  GameStatus,
   LEVEL_SETTINGS,
   Level,
   MAX_LENGTH_X,
@@ -111,6 +112,8 @@ export class SetupContainerComponent implements OnInit {
       xAxisSize: xAxisSize,
       yAxisSize: yAxisSize,
       minesNumber: minesNumber,
+      status: GameStatus.READY_TO_START,
+      levelSelected: Level.CUSTOMIZED,
     });
 
     this.route.navigate([GameRoutes.BOARD]);

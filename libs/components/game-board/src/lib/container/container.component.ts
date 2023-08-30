@@ -33,7 +33,9 @@ export class ContainerComponent implements OnInit {
       if (this.gameService.currentSetting().status === GameStatus.FINISHED) {
         //when game is over
         if (this.gameService.playerLost()) {
-          this.alertService.openSnackBar('Game over!');
+          this.alertService.openSnackBar(
+            'Game over! Hit the reset button, and try again!'
+          );
         }
 
         if (this.gameService.playerWon()) {

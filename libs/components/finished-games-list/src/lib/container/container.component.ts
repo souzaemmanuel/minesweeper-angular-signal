@@ -14,9 +14,7 @@ import {
 })
 export class ContainerComponent implements OnInit {
   constructor(
-    private gameService: GameService,
     private route: Router,
-    private alertService: AlertService,
     private historyService: MatchHistoryService
   ) {}
 

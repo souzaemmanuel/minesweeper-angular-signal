@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@minesweep-game/finished-games-list": [
+        "libs/components/finished-games-list/src/index.ts"
+      ],
+      "@minesweep-game/game-board": ["libs/components/game-board/src/index.ts"],
+      "@minesweep-game/game-setup": ["libs/components/game-setup/src/index.ts"],
+      "@minesweep-game/material": ["libs/material/src/index.ts"],
+      "@minesweep-game/models": ["libs/models/src/index.ts"],
+      "@minesweep-game/services": ["libs/services/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

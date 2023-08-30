@@ -1,0 +1,32 @@
+@use '@angular/material' as mat;
+
+.card-container {
+  @include mat.elevation(4);
+  margin: 5rem;
+
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    gap: 5rem;
+  }
+
+  .grid {
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+
+    .row {
+      flex-wrap: wrap;
+      background-color: gainsboro;
+    }
+  }
+
+  .actions-section {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 2rem;
+  }
+}

@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4px;
+  width: 30px;
+  height: 30px;
+  background: lightgray;
+  cursor: pointer;
+
+  &.revealed {
+    @include mat.elevation(2);
+  }
+
+  &.hidden {
+    @include mat.elevation(4);
+  }
+
+  &.non-zero {
+    font-weight: 700;
+    color: #3d3d3d;
+  }
+
+  &.zero {
+    visibility: hidden;
+  }
+}

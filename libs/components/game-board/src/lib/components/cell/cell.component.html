@@ -1,0 +1,22 @@
+<div
+  class="cell"
+  [class.non-zero]="cell.value && cell.value > 0"
+  [class.zero]="cell.status === CellVisibility.VISIBLE && cell.value === 0"
+  [class.revealed]="cell.status === CellVisibility.VISIBLE"
+  [class.hidden]="cell.status !== CellVisibility.VISIBLE"
+  [ngSwitch]="true"
+>
+  <div *ngSwitchCase="cell.type === cellType.FLAG">🚩</div>
+  <div *ngSwitchCase="cell.type === cellType.BOTH">🚩</div>
+  <div
+    *ngSwitchCase="
+      cell.type === cellType.MINE && cell.status === CellVisibility.VISIBLE
+    "
+  >
+    💣
+  </div>
+  <div *ngSwitchCase="cell.status === CellVisibility.HIDDEN"></div>
+  <div *ngSwitchDefault>
+    {{ cell.value }}
+  </div>
+</div>

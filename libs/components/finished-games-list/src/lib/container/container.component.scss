@@ -1,0 +1,13 @@
+@use '@angular/material' as mat;
+
+.card-container {
+  @include mat.elevation(8);
+  margin: 5rem;
+
+  .table-container {
+    @include mat.elevation(1);
+    margin: 2rem 2rem;
+    // .match-table {
+    // }
+  }
+}

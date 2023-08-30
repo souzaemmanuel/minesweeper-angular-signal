@@ -1,0 +1,27 @@
+@use '@angular/material' as mat;
+
+.card-container {
+  @include mat.elevation(4);
+  margin: 5rem;
+
+  .form-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .actions-section {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 2rem;
+  }
+}

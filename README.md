@@ -2,7 +2,9 @@
 
 ✨ **This project is about the classic minesweeper game, in which I take the opportunity to use version 16 of Angular to learn and study the new feature released to manage state on the frontend, called [Angular Signals.](https://angular.io/guide/signals)** ✨
 
-PICTURE / GIF
+![Demo](print1.png)
+![Demo](print2.png)
+![Demo](print3.png)
 
 ## Technical details
 

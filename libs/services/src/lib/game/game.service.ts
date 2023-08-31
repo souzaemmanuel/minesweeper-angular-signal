@@ -10,8 +10,8 @@ import {
   MatchStatus,
   Level,
 } from '@minesweep-game/models';
-import { Subscription, interval } from 'rxjs';
 import { MatchHistoryService } from '../match-history/match-history.service';
+import { Subscription, interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -125,13 +125,13 @@ export class GameService {
       match.status = this.currentSetting().matchStatus;
     });
 
-    this.matchHistoryService
-      .save(this.currentMatch())
-      .subscribe((res) => console.log(res));
+    //no need to unsubscribe from http requests
+    this.matchHistoryService.save(this.currentMatch()).subscribe();
   }
 
   saveTimeOfMatchStarted(): void {
     this.currentMatch.mutate((match) => {
+      console.log('ajhdadakjhd');
       match.startTime = new Date().toISOString();
     });
   }

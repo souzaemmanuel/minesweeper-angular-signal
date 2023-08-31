@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'minesweep-game-root',
+  selector: 'ms-game-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

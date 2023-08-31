@@ -7,10 +7,6 @@ import { Match } from '../models/match.model';
 export class AppService {
   constructor(@InjectModel('GameMatch') private matchModel: Model<Match>) {}
 
-  getData(): { message: string } {
-    return { message: 'Hello API' };
-  }
-
   save(matchInfo: Match) {
     return new this.matchModel(matchInfo).save();
   }

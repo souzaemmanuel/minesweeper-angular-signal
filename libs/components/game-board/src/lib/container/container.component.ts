@@ -62,7 +62,7 @@ export class ContainerComponent implements OnInit {
   }
 
   onRightClick(event: Event, coords: number[]) {
-    event.preventDefault();
+    event?.preventDefault();
     this.gameService.toggleFlagAtPosition(coords[0], coords[1]);
   }
 

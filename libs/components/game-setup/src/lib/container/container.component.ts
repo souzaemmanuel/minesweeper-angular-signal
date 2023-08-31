@@ -67,17 +67,14 @@ export class SetupContainerComponent implements OnInit {
     switch (gameLevel) {
       case Level.EASY:
         this.updateValues(currentSetting);
-        this.levelSelected = Level.EASY;
         break;
 
       case Level.MEDIUM:
         this.updateValues(currentSetting);
-        this.levelSelected = Level.MEDIUM;
         break;
 
       case Level.HARD:
         this.updateValues(currentSetting);
-        this.levelSelected = Level.HARD;
         break;
     }
   }

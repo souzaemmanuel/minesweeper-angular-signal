@@ -131,7 +131,6 @@ export class GameService {
 
   saveTimeOfMatchStarted(): void {
     this.currentMatch.mutate((match) => {
-      console.log('ajhdadakjhd');
       match.startTime = new Date().toISOString();
     });
   }

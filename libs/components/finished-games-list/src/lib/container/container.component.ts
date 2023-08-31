@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameRoutes, MatchHistory } from '@minesweep-game/models';
-import {
-  AlertService,
-  GameService,
-  MatchHistoryService,
-} from '@minesweep-game/services';
+import { MatchHistoryService } from '@minesweep-game/services';
 
 @Component({
   selector: 'ms-container',

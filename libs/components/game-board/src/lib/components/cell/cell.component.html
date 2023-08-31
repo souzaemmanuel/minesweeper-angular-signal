@@ -6,8 +6,12 @@
   [class.hidden]="cell.status !== CellVisibility.VISIBLE"
   [ngSwitch]="true"
 >
-  <div *ngSwitchCase="cell.type === cellType.FLAG">🚩</div>
-  <div *ngSwitchCase="cell.type === cellType.BOTH">🚩</div>
+  <div *ngSwitchCase="cell.type === cellType.FLAG">
+    <mat-icon color="warn">flag</mat-icon>
+  </div>
+  <div *ngSwitchCase="cell.type === cellType.BOTH">
+    <mat-icon color="warn">flag</mat-icon>
+  </div>
   <div
     *ngSwitchCase="
       cell.type === cellType.MINE && cell.status === CellVisibility.VISIBLE

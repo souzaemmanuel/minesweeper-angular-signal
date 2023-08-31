@@ -7,7 +7,7 @@ import { CONN_STRING } from '../../secrets';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(CONN_STRING),
+    MongooseModule.forRoot(CONN_STRING), //add here your connection string
     MongooseModule.forFeature([{ name: 'GameMatch', schema: GameMatchSchema }]),
   ],
   controllers: [AppController],

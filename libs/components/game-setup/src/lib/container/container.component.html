@@ -8,48 +8,87 @@
   </mat-card-header>
 
   <mat-card-content>
-    <form class="form-container" [formGroup]="form">
-      <mat-form-field appearance="outline">
-        <mat-label>Size of axis X (Max is {{ maxLengthX }})</mat-label>
-        <input
-          type="number"
+    <div class="form-container">
+      <div class="slider-field">
+        <div class="label">
+          Width: {{ xAxisSizeValue }}
+          <span> (Max is {{ maxLengthX }}) </span>
+        </div>
+        <mat-slider
           [max]="maxLengthX"
-          min="0"
-          matInput
-          formControlName="xAxisSize"
-          (change)="onChangeAxisValue()"
-        />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Size of axis Y (Max is {{ maxLengthY }})</mat-label>
-        <input
+          [min]="minLengthX"
+          [step]="1"
+          [discrete]="true"
+        >
+          <input
+            matSliderThumb
+            [(ngModel)]="xAxisSizeValue"
+            (valueChange)="onChangeAxisValue()"
+          />
+        </mat-slider>
+      </div>
+
+      <div class="slider-field">
+        <div class="label">
+          Height: {{ yAxisSizeValue }}
+          <span> (Max is {{ maxLengthY }}) </span>
+        </div>
+        <mat-slider
           [max]="maxLengthY"
-          min="0"
-          type="number"
-          matInput
-          formControlName="yAxisSize"
-          (change)="onChangeAxisValue()"
-        />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Number of mines (Max is {{ maxNumberOfMines }})</mat-label>
-        <input type="number" matInput formControlName="minesNumber" />
-      </mat-form-field>
-    </form>
+          [min]="minLengthY"
+          [step]="1"
+          [discrete]="true"
+        >
+          <input
+            matSliderThumb
+            [(ngModel)]="yAxisSizeValue"
+            (valueChange)="onChangeAxisValue()"
+          />
+        </mat-slider>
+      </div>
+
+      <div class="slider-field">
+        <div class="label">
+          Mines: {{ minesNumber }}
+          <span> (Max is {{ maxNumberOfMines }}) </span>
+        </div>
+        <mat-slider
+          [disabled]="maxNumberOfMines === 0"
+          [max]="maxNumberOfMines"
+          [min]="minMinesLength"
+          [step]="1"
+          [discrete]="true"
+        >
+          <input
+            matSliderThumb
+            [(ngModel)]="minesNumber"
+            (valueChange)="onChangeAxisValue()"
+          />
+        </mat-slider>
+      </div>
+    </div>
+
     <mat-divider></mat-divider>
-    <section>
-      <mat-button-toggle-group
-        (change)="onChangeLevel()"
-        [(ngModel)]="levelSelected"
-      >
-        <mat-button-toggle value="Easy">Easy</mat-button-toggle>
-        <mat-button-toggle value="Medium">Medium</mat-button-toggle>
-        <mat-button-toggle value="Hard">Hard</mat-button-toggle>
-      </mat-button-toggle-group>
+    <section class="group-buttons">
+      <div class="container">
+        <div class="title">Pre-defined levels</div>
+        <mat-button-toggle-group
+          (change)="onChangeLevel()"
+          [(ngModel)]="levelSelected"
+        >
+          <mat-button-toggle value="Easy">Easy</mat-button-toggle>
+          <mat-button-toggle value="Medium">Medium</mat-button-toggle>
+          <mat-button-toggle value="Hard">Hard</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
     </section>
   </mat-card-content>
+
   <mat-card-actions class="actions-section">
-    <button (click)="startGame()" color="primary" mat-raised-button>
+    <button color="basic" mat-raised-button (click)="goToRecordsList()">
+      RANKING
+    </button>
+    <button color="primary" mat-raised-button (click)="startGame()">
       START
     </button>
   </mat-card-actions>

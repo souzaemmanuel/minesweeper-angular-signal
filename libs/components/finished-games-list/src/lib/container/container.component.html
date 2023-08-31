@@ -9,12 +9,16 @@
     <table mat-table [dataSource]="matches" class="match-table">
       <ng-container matColumnDef="startTime">
         <th mat-header-cell *matHeaderCellDef>Start Time</th>
-        <td mat-cell *matCellDef="let element">{{ element.startTime }}</td>
+        <td mat-cell *matCellDef="let element">
+          {{ element.startTime | date : 'MM-dd-YYYY hh:mm' }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="endTime">
         <th mat-header-cell *matHeaderCellDef>End Time</th>
-        <td mat-cell *matCellDef="let element">{{ element.endTime }}</td>
+        <td mat-cell *matCellDef="let element">
+          {{ element.endTime | date : 'MM-dd-YYYY hh:mm' }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="difficulty">
@@ -27,7 +31,7 @@
       </ng-container>
 
       <ng-container matColumnDef="totalTimeSpent">
-        <th mat-header-cell *matHeaderCellDef>Total time spent</th>
+        <th mat-header-cell *matHeaderCellDef>Time spent</th>
         <td mat-cell *matCellDef="let element">{{ element.totalTimeSpent }}</td>
       </ng-container>
 
@@ -35,6 +39,27 @@
         <th mat-header-cell *matHeaderCellDef>Status</th>
         <td mat-cell *matCellDef="let element">
           <mat-chip color="primary">{{ element.status }}</mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="yAxisSize">
+        <th mat-header-cell *matHeaderCellDef>Axis Y</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.yAxisSize }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="xAxisSize">
+        <th mat-header-cell *matHeaderCellDef>Axis X</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.xAxisSize }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="minesNumber">
+        <th mat-header-cell *matHeaderCellDef>Mines</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.minesNumber }}
         </td>
       </ng-container>
 

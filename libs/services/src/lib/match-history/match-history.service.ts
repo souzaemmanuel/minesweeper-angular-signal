@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Level, MatchHistory, MatchStatus } from '@minesweep-game/models';
-import { Observable, map, of } from 'rxjs';
+import { MatchHistory } from '@minesweep-game/models';
+import { Observable } from 'rxjs';
 
 export const API_URL = 'http://localhost:3000/api';
 

@@ -118,26 +118,25 @@ export class GameService {
     });
   }
 
-  finishMatch() {
+  private finishMatch(): void {
     this.currentMatch.mutate((match) => {
       match.endTime = new Date().toISOString();
       match.totalTimeSpent = this.formattedTimer();
       match.status = this.currentSetting().matchStatus;
     });
 
-    //TODO: Unsubscribe from that
     this.matchHistoryService
       .save(this.currentMatch())
       .subscribe((res) => console.log(res));
   }
 
-  saveTimeOfMatchStarted() {
+  saveTimeOfMatchStarted(): void {
     this.currentMatch.mutate((match) => {
       match.startTime = new Date().toISOString();
     });
   }
 
-  resetGame(): void {
+  private resetGame(): void {
     this.grid.set([]);
 
     this.currentSetting.mutate((settings) => {
@@ -151,7 +150,7 @@ export class GameService {
     this.stopWatch();
   }
 
-  startimer() {
+  private startimer(): void {
     this.timerSubscription = interval(1000).subscribe((tick: number) => {
       const hrs = (~~(tick / 3600)).toString().padStart(2, '0');
       const mins = (~~((tick % 3600) / 60)).toString().padStart(2, '0');
@@ -162,12 +161,12 @@ export class GameService {
     });
   }
 
-  stopWatch() {
+  private stopWatch(): void {
     this.timerSubscription?.unsubscribe();
     this.timerSubscription = undefined;
   }
 
-  createBoard({ xAxisSize, yAxisSize, minesNumber }: GameSettings) {
+  createBoard({ xAxisSize, yAxisSize, minesNumber }: GameSettings): void {
     this.grid.mutate((grid) => {
       for (let y = 0; y < yAxisSize; y++) {
         grid.push([]);
@@ -317,6 +316,10 @@ export class GameService {
 
     const cell = this.grid()[coords[0]][coords[1]];
 
+    if (cell.type === CellType.FLAG) {
+      return;
+    }
+
     if (cell.value === 0) {
       this.revealZeroNeighbours(coords);
     }
@@ -382,10 +385,6 @@ export class GameService {
   private revealZeroNeighbours(coords: number[]): void {
     const currentCell = this.grid()[coords[0]][coords[1]];
 
-    if (currentCell.type === CellType.FLAG) {
-      this.removeFlag(currentCell);
-    }
-
     if (currentCell.value !== 0) {
       currentCell.status = CellVisibility.VISIBLE;
       return;
@@ -404,6 +403,10 @@ export class GameService {
           typeof cellAround.value === 'number';
 
         if (isValidForReveal) {
+          if (cellAround.type === CellType.FLAG) {
+            this.removeFlag(cellAround);
+          }
+
           //to discover the cells smoothly
           setTimeout(() => {
             cellAround.status = CellVisibility.VISIBLE;

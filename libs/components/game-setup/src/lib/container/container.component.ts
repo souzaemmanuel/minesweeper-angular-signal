@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   GameRoutes,
+  GameSettings,
   GameStatus,
   LEVEL_SETTINGS,
   Level,
@@ -10,6 +10,7 @@ import {
   MAX_LENGTH_Y,
   MIN_LENGTH_X,
   MIN_LENGTH_Y,
+  MIN_MINES_LENGTH,
 } from '@minesweep-game/models';
 import { GameService } from '@minesweep-game/services';
 
@@ -19,13 +20,17 @@ import { GameService } from '@minesweep-game/services';
   styleUrls: ['./container.component.scss'],
 })
 export class SetupContainerComponent implements OnInit {
-  form!: FormGroup;
-
   readonly maxLengthY = MAX_LENGTH_Y;
   readonly maxLengthX = MAX_LENGTH_X;
 
   readonly minLengthY = MIN_LENGTH_Y;
   readonly minLengthX = MIN_LENGTH_X;
+
+  readonly minMinesLength = MIN_MINES_LENGTH;
+
+  yAxisSizeValue = this.minLengthY;
+  xAxisSizeValue = this.minLengthX;
+  minesNumber = LEVEL_SETTINGS[Level.EASY].minesNumber;
 
   maxNumberOfMines = 0;
   levelSelected?: Level;
@@ -33,40 +38,25 @@ export class SetupContainerComponent implements OnInit {
   constructor(private gameService: GameService, private route: Router) {}
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      yAxisSize: new FormControl(0, [
-        Validators.required,
-        Validators.min(this.minLengthY),
-        Validators.max(this.maxLengthY),
-      ]),
-      xAxisSize: new FormControl(0, [
-        Validators.required,
-        Validators.max(this.maxLengthX),
-        Validators.min(this.minLengthX),
-      ]),
-      minesNumber: new FormControl(0, [Validators.required]),
-    });
+    this.calculateMinesMaxNum(this.xAxisSizeValue, this.yAxisSizeValue);
   }
 
   onChangeAxisValue(): void {
-    this.levelSelected = undefined;
-
-    if (this.form.invalid) {
-      return;
-    }
-
-    const { xAxisSize, yAxisSize } = this.form.value;
-
-    this.calculateMinesMaxNum(xAxisSize, yAxisSize);
-
-    this.form
-      .get('mines')
-      ?.setValidators([Validators.max(this.maxNumberOfMines)]);
+    this.levelSelected = Level.CUSTOMIZED;
+    this.calculateMinesMaxNum(this.xAxisSizeValue, this.yAxisSizeValue);
   }
 
   calculateMinesMaxNum(xAxisSize: number, yAxisSize: number): void {
     //The maximum number of mines is half of the total cells on the board
     this.maxNumberOfMines = Math.floor((xAxisSize * yAxisSize) / 2);
+  }
+
+  updateValues({ xAxisSize, yAxisSize, minesNumber }: GameSettings): void {
+    this.xAxisSizeValue = xAxisSize;
+    this.yAxisSizeValue = yAxisSize;
+    this.minesNumber = minesNumber;
+
+    this.calculateMinesMaxNum(xAxisSize, yAxisSize);
   }
 
   onChangeLevel() {
@@ -76,46 +66,38 @@ export class SetupContainerComponent implements OnInit {
 
     switch (gameLevel) {
       case Level.EASY:
-        this.form.patchValue(currentSetting);
-        this.calculateMinesMaxNum(
-          currentSetting.xAxisSize,
-          currentSetting.yAxisSize
-        );
+        this.updateValues(currentSetting);
+        this.levelSelected = Level.EASY;
         break;
 
       case Level.MEDIUM:
-        this.form.patchValue(currentSetting);
-        this.calculateMinesMaxNum(
-          currentSetting.xAxisSize,
-          currentSetting.yAxisSize
-        );
+        this.updateValues(currentSetting);
+        this.levelSelected = Level.MEDIUM;
         break;
 
       case Level.HARD:
-        this.form.patchValue(currentSetting);
-        this.calculateMinesMaxNum(
-          currentSetting.xAxisSize,
-          currentSetting.yAxisSize
-        );
+        this.updateValues(currentSetting);
+        this.levelSelected = Level.HARD;
         break;
     }
   }
 
   startGame(): void {
-    if (this.form.invalid) {
-      return;
-    }
+    const setting = {
+      xAxisSize: this.xAxisSizeValue,
+      yAxisSize: this.yAxisSizeValue,
+      minesNumber: this.minesNumber,
 
-    const { xAxisSize, yAxisSize, minesNumber } = this.form.value;
-
-    this.gameService.start({
-      xAxisSize: xAxisSize,
-      yAxisSize: yAxisSize,
-      minesNumber: minesNumber,
       status: GameStatus.READY_TO_START,
-      levelSelected: Level.CUSTOMIZED,
-    });
+      levelSelected: this.levelSelected,
+    };
+
+    this.gameService.start(setting);
 
     this.route.navigate([GameRoutes.BOARD]);
+  }
+
+  goToRecordsList(): void {
+    this.route.navigate([GameRoutes.LIST]);
   }
 }

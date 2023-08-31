@@ -26,15 +26,10 @@ export class ContainerComponent implements OnInit {
     'difficulty',
     'totalTimeSpent',
     'status',
+    'yAxisSize',
+    'xAxisSize',
+    'minesNumber',
   ];
-
-  labelsToDisplay: { [key: string]: string } = {
-    startTime: 'Start Time',
-    endTime: 'End Time',
-    difficulty: 'Difficulty',
-    totalTimeSpent: 'Total time spent',
-    status: 'Status',
-  };
 
   ngOnInit(): void {
     this.historyService.getAll().subscribe((res) => {

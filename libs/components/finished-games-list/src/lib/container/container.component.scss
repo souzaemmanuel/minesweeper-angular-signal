@@ -7,7 +7,11 @@
   .table-container {
     @include mat.elevation(1);
     margin: 2rem 2rem;
-    // .match-table {
-    // }
+  }
+
+  .actions-section {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 1.5rem;
   }
 }

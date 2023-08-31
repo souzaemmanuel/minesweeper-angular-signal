@@ -13,13 +13,13 @@
 ### Stack:
 
 - `Angular 16 framework for frontend`
-- `Angular singals to manage the state of the frontend`
+- `Angular signals to manage the state of the frontend`
 - `Simple NodeJs API, using NestJs`
-- `Mongo for database.`
+- `Mongo for the database.`
   <br />
   <br />
 
-First of all, make sure you have nx available in your terminal. If not run install it running that command:
+First of all, make sure you have nx available in your terminal. If not install it by running this command:
 
 ```
 npm install -g nx
@@ -35,17 +35,17 @@ npm install
 
 To run the frontend app use the command: `nx serve frontend`
 
-To customize the project and create new libs, components, services, etc take a look at [the Nx documentation](https://nx.dev/plugin-features/use-code-generators), or use the Angular CLI.
+To customize the project and create new libs, components, services, etc. take a look at [the Nx documentation](https://nx.dev/plugin-features/use-code-generators), or use the Angular CLI.
 
 ## Unit Testing
 
 **To unit test this project I'm using Jest both front and backend.**
 
-- To test the service lib, for example run: `nx test services`
+- To test the service lib, for example, run: `nx test services`
 
 - To test the backend app, run: `nx test backend`
 
-- To se the covarege, run `nx test services --coverage`
+- To see the coverage, run `nx test services --coverage`
 
 Take a look at the coverage folder.
 
@@ -53,7 +53,7 @@ Take a look at the coverage folder.
 
 **On this project I'm using ESlint as well**
 
-- To lint the services lib, for example run: `nx run services:lint --fix`
+- To lint the services lib, for example, run: `nx run services:lint --fix`
 
 - To lint the backend app, run: `nx run backend:lint --fix`
 
